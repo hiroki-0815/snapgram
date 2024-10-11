@@ -14,8 +14,10 @@ import { Input } from "@/components/ui/input";
 import { SignupValadation } from "@/lib/validation/index";
 import { Link } from "react-router-dom";
 import { createUserAccount } from "@/lib/appwrite/api";
+import { useToast } from "@/hooks/use-toast";
 
 const SignupForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
 
   // 1. Define your form.
@@ -32,7 +34,12 @@ const SignupForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SignupValadation>) {
     const newUser = await createUserAccount(values);
-    console.log(newUser);
+
+    if (!newUser) {
+      return toast({
+        title: "Sign up failed. Please try again",
+      });
+    }
   }
 
   return (
